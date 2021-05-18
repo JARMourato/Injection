@@ -58,10 +58,14 @@ import Injection
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        inject {
-            reader
-            database
-            cacheModule
+        do {
+            try inject {
+                reader
+                database
+                cacheModule
+            }
+        } catch {
+            print("TODO: Handle error properly... \(error)")
         }
         return true
     }
