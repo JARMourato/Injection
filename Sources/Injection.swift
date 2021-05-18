@@ -140,9 +140,11 @@ public enum OptionalInject<T> {
 
 // MARK: Function Builders
 
-@_functionBuilder
+@resultBuilder
 public enum DependenciesBuilder {
-    static func buildBlock(_ children: [Dependency]...) -> [Dependency] { children.flatMap { $0 } }
+    public static func buildBlock(_ children: [Dependency]...) -> [Dependency] {
+        children.flatMap { $0 }
+    }
 }
 
 /// A new instance of `T` is created each time it is injected. The internal container holds no reference to it.
