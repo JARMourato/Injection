@@ -14,7 +14,6 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: fwal/setup-swift@v1
     - uses: actions/checkout@v2
     - name: Prepare Build
       run: brew bundle
