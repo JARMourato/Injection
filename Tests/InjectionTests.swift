@@ -9,6 +9,14 @@ final class InjectionTests: XCTestCase {
     class A { init(block: Action? = nil) { block?() } }
     class B { init(block: Action? = nil) { block?() } }
     struct C {}
+    
+    enum Fail: Swift.Error {
+        case mock
+    }
+    
+    struct Failable {
+        static func create() throws -> Failable { throw Fail.mock }
+    }
 
     override func setUp() {
         super.setUp()
@@ -53,13 +61,13 @@ final class InjectionTests: XCTestCase {
         let dependencyA = container.injected["A"]
         XCTAssertNotNil(dependencyA)
         XCTAssertTrue(dependencyA!.isSingleton)
-        let instanceA = dependencyA!.factory()
+        let instanceA = try! dependencyA!.factory()
         XCTAssertTrue(instanceA is A)
         XCTAssertFalse(instanceA is B)
         let dependencyB = container.injected["B"]
         XCTAssertNotNil(dependencyB)
         XCTAssertFalse(dependencyB!.isSingleton)
-        let instanceB = dependencyB!.factory()
+        let instanceB = try! dependencyB!.factory()
         XCTAssertTrue(instanceB is B)
         XCTAssertFalse(instanceB is A)
     }
@@ -150,7 +158,7 @@ final class InjectionTests: XCTestCase {
 
         XCTAssertNoThrow(try inject {
             factory { A { hasInitializedA = true } }
-            singleton { B { hasInitializedB = true } }
+            lazySingleton { B { hasInitializedB = true } }
         })
 
         class TestInjected1 {
@@ -209,7 +217,7 @@ final class InjectionTests: XCTestCase {
         XCTAssertFalse(hasInitializedA)
         XCTAssertNotNil(test1.a)
         XCTAssertTrue(hasInitializedA)
-        XCTAssertFalse(hasInitializedB)
+        XCTAssertTrue(hasInitializedB) // `singleton` is immediatly initialized
         XCTAssertNotNil(test1.b)
         XCTAssertTrue(hasInitializedB)
         hasInitializedA = false
@@ -222,6 +230,20 @@ final class InjectionTests: XCTestCase {
         XCTAssertFalse(hasInitializedB) // Singleton so it was already initialized and therefore it won't be initialized.
         XCTAssertNotEqual(ObjectIdentifier(test1.a!), ObjectIdentifier(test2.a!))
         XCTAssertEqual(ObjectIdentifier(test1.b!), ObjectIdentifier(test2.b!))
+    }
+    
+    func test_factoryCreationWithFailure_wontThrowError() {
+        XCTAssertNoThrow(try inject { factory { try Failable.create() } })
+        assert(try resolve() as Failable, throws: Fail.mock)
+    }
+    
+    func test_lazySingletonCreationWithFailure_wontThrowError() {
+        XCTAssertNoThrow(try inject { lazySingleton { try Failable.create() } })
+        assert(try resolve() as Failable, throws: Fail.mock)
+    }
+    
+    func test_singletonCreationWithFailure_willThrowErrorImmediately() {
+        assert(try inject { try singleton { try Failable.create() } }, throws: Fail.mock)
     }
 }
 
