@@ -153,13 +153,15 @@ public func factory<T>(constructor: @escaping DependencyFactory<T>) -> [Dependen
     [DependencyContainer(isSingleton: false, factory: constructor)]
 }
 
-/// The same instance of `T` is returned each time it is injected. An instance like this has its lifetime connected to the internal container instance, which essencially is the app lifetime. Since this is gonna be used throughout the app lifetime, it is instantiated immediatly. This allows catching errors early on. There is a lazy version, checkout `lazySingleton`.
+/// The same instance of `T` is returned each time it is injected. An instance like this has its lifetime connected to the internal container instance, which essencially is the app lifetime. Since this is gonna be used throughout the app lifetime, it is instantiated immediately. This allows catching errors early on. 
+/// - SeeAlso: for the lazy equivalent of this function, see `lazySingleton`.
 public func singleton<T>(constructor: @escaping DependencyFactory<T>) rethrows -> [Dependency] {
     let value = try constructor()
     return [DependencyContainer(isSingleton: true, factory: { value })]
 }
 
-/// The same instance of `T` is returned each time it is injected. An instance like this has its lifetime connected to the internal container instance, which essencially is the app lifetime. In this version, the instance is only created the first time it needs to be resolved.
+/// The same instance of `T` is returned each time it is injected. An instance like this has its lifetime connected to the internal container instance, which essentially is the app lifetime. In this version, the instance is only created the first time it needs to be resolved, thus, lazily.
+/// - SeeAlso: for the non-lazy equivalent of this function, see `singleton`.
 public func lazySingleton<T>(constructor: @escaping DependencyFactory<T>) -> [Dependency] {
     return [DependencyContainer(isSingleton: true, factory: constructor)]
 }

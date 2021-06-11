@@ -9,8 +9,8 @@
 `Injection` is a tiny utility to help managing dependency injection.
 
 **Features:**
-- `Singleton`, dependencies that are only instanciated once and are shared amongst its users
-- `LazySingleton`, dependencies that are only instanciated once, lazily, and are shared amongst its users
+- `Singleton`, dependencies that are only instantiated once and are shared amongst its users
+- `LazySingleton`, dependencies that are only instantiated once, lazily, and are shared amongst its users
 - `Factory`, dependencies that are instancied upon usage, unique to each user
 - Utility property wrappers
 

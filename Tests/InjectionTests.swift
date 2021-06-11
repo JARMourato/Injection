@@ -217,7 +217,7 @@ final class InjectionTests: XCTestCase {
         XCTAssertFalse(hasInitializedA)
         XCTAssertNotNil(test1.a)
         XCTAssertTrue(hasInitializedA)
-        XCTAssertTrue(hasInitializedB) // `singleton` is immediatly initialized
+        XCTAssertTrue(hasInitializedB) // `singleton` is immediately initialized
         XCTAssertNotNil(test1.b)
         XCTAssertTrue(hasInitializedB)
         hasInitializedA = false
