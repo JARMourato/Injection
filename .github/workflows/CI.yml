@@ -11,12 +11,9 @@ jobs:
     env:
       PACKAGE_NAME: Injection
       
-    runs-on: macos-latest
+    runs-on: macos-11
 
     steps:
-    - uses: fwal/setup-swift@v1
-    - name: Get swift version
-      run: swift --version
     - uses: actions/checkout@v2
     - name: Prepare Build
       run: brew bundle
@@ -27,9 +24,9 @@ jobs:
       run: swiftformat --lint . && swiftlint
     - name: Run tests
       run: swift test --enable-code-coverage
-#    - name: Prepare Code Coverage
-#      run: xcrun llvm-cov export -format="lcov" -instr-profile=$(find .build -name default.profdata) $(find .build -name ${{ env.PACKAGE_NAME }}PackageTests) > info.lcov
-#    - name: Upload to CodeCov.io
-#      uses: codecov/codecov-action@v2
-#      with:
-#        files: ./info.lcov
+    - name: Prepare Code Coverage
+      run: xcrun llvm-cov export -format="lcov" -instr-profile=$(find .build -name default.profdata) $(find .build -name ${{ env.PACKAGE_NAME }}PackageTests) > info.lcov
+    - name: Upload to CodeCov.io
+      uses: codecov/codecov-action@v2
+      with:
+        files: ./info.lcov
