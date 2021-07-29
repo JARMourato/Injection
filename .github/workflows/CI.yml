@@ -11,9 +11,12 @@ jobs:
     env:
       PACKAGE_NAME: Injection
       
-    runs-on: macos-11
+    runs-on: ubuntu-latest
 
     steps:
+    - uses: fwal/setup-swift@v1
+    - name: Get swift version
+      run: swift --version
     - uses: actions/checkout@v2
     - name: Prepare Build
       run: brew bundle
