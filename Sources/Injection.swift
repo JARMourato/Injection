@@ -1,9 +1,10 @@
 import Foundation
 
-public typealias DependencyFactory = () -> Any
+public typealias DependencyFactory<T> = () throws -> T
+public typealias AnyDependencyFactory = () throws -> Any
 
 public protocol Dependency {
-    var factory: DependencyFactory { get }
+    var factory: AnyDependencyFactory { get }
     var isSingleton: Bool { get }
     var type: Any.Type { get }
 }
@@ -15,12 +16,12 @@ extension Dependency {
 final class DependencyContainer<T>: Dependency {
     let isSingleton: Bool
     let type: Any.Type
-    let factory: DependencyFactory
+    let factory: AnyDependencyFactory
 
-    init(isSingleton: Bool, factory: @escaping () -> T) {
+    init(isSingleton: Bool, factory: @escaping DependencyFactory<T>) {
         self.isSingleton = isSingleton
         type = T.self
-        self.factory = { factory() }
+        self.factory = { try factory() }
     }
 }
 
@@ -64,14 +65,14 @@ final class Dependencies {
         guard let injectedDependency = injected[typeName] else { throw Error.failedToResolveDependency(typeName) }
         let resolved: T
         if injectedDependency.isSingleton {
-            let buildBlock: () -> T = {
-                let instance = injectedDependency.factory() as! T
+            let buildBlock: DependencyFactory<T> = {
+                let instance = try injectedDependency.factory() as! T
                 self.instances[typeName] = instance
                 return instance
             }
-            resolved = instances[typeName] as? T ?? buildBlock()
+            resolved = try instances[typeName] as? T ?? buildBlock()
         } else {
-            resolved = injectedDependency.factory() as! T
+            resolved = try injectedDependency.factory() as! T
         }
         return resolved
     }
@@ -97,7 +98,7 @@ public struct Inject<T> {
 /// Creates a `Dependency` lazily injectable through `@LazyInject var variableName: Dependency`.
 @propertyWrapper
 public enum LazyInject<T> {
-    case unresolved(() throws -> T)
+    case unresolved(DependencyFactory<T>)
     case resolved(T)
 
     public init() { self = .unresolved { try resolve() } }
@@ -148,12 +149,24 @@ public enum DependenciesBuilder {
 }
 
 /// A new instance of `T` is created each time it is injected. The internal container holds no reference to it.
-public func factory<T>(constructor: @escaping () -> T) -> [Dependency] {
+public func factory<T>(constructor: @escaping DependencyFactory<T>) -> [Dependency] {
     [DependencyContainer(isSingleton: false, factory: constructor)]
 }
 
-/// The same instance of `T` is returned each time it is injected. An instance like this has its lifetime connected to the internal container instance, which essencially is the app lifetime.
-public func singleton<T>(constructor: @escaping () -> T) -> [Dependency] {
+/// The same instance of `T` is returned each time it is injected. An instance like this
+/// has its lifetime connected to the internal container instance, which essencially is the app lifetime.
+/// Since this is gonna be used throughout the app lifetime, it is instantiated immediately. This allows catching errors early on.
+/// - SeeAlso: for the lazy equivalent of this function, see `lazySingleton`.
+public func singleton<T>(constructor: @escaping DependencyFactory<T>) rethrows -> [Dependency] {
+    let value = try constructor()
+    return [DependencyContainer(isSingleton: true, factory: { value })]
+}
+
+/// The same instance of `T` is returned each time it is injected. An instance like this
+/// has its lifetime connected to the internal container instance, which essentially is the app lifetime.
+/// In this version, the instance is only created the first time it needs to be resolved, thus, lazily.
+/// - SeeAlso: for the non-lazy equivalent of this function, see `singleton`.
+public func lazySingleton<T>(constructor: @escaping DependencyFactory<T>) -> [Dependency] {
     [DependencyContainer(isSingleton: true, factory: constructor)]
 }
 
@@ -166,6 +179,6 @@ public func module(@DependenciesBuilder makeChildren: () -> [Dependency]) -> [De
 /// app is initialized or at least before any of the injected properties get initialized, otherwise there will be blood.
 ///
 /// - Note: It should be used only once.
-public func inject(@DependenciesBuilder makeDependencies: () -> [Dependency]) throws {
-    try Dependencies.shared.inject(makeDependencies())
+public func inject(@DependenciesBuilder makeDependencies: () throws -> [Dependency]) throws {
+    try Dependencies.shared.inject(try makeDependencies())
 }

@@ -9,7 +9,8 @@
 `Injection` is a tiny utility to help managing dependency injection.
 
 **Features:**
-- `Singleton`, dependencies that are only instanciated once and are shared amongst its' users
+- `Singleton`, dependencies that are only instantiated once and are shared amongst its users
+- `LazySingleton`, dependencies that are only instantiated once, lazily, and are shared amongst its users
 - `Factory`, dependencies that are instancied upon usage, unique to each user
 - Utility property wrappers
 
@@ -40,8 +41,11 @@ import Injection
 // A dependency that gets created every time it needs to be resolved, and therefore its lifetime is bounded to the instance that uses it
 let reader = factory { RSSReader() }
 
+// A dependency that gets created immediately and is shared throughout the lifetime of the application.
+let database = singleton { Analytics() }
+
 // A dependency that gets created only once, the first time it needs to be resolved and has the lifetime of the application.
-let database = singleton { Realm() }
+let database = lazySingleton { Realm() }
 
 // Syntatic sugar to combine dependencies to inject
 let cacheModule = module {
