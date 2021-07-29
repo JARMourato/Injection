@@ -27,9 +27,9 @@ jobs:
       run: swiftformat --lint . && swiftlint
     - name: Run tests
       run: swift test --enable-code-coverage
-    - name: Prepare Code Coverage
-      run: xcrun llvm-cov export -format="lcov" -instr-profile=$(find .build -name default.profdata) $(find .build -name ${{ env.PACKAGE_NAME }}PackageTests) > info.lcov
-    - name: Upload to CodeCov.io
-      uses: codecov/codecov-action@v2
-      with:
-        files: ./info.lcov
+#    - name: Prepare Code Coverage
+#      run: xcrun llvm-cov export -format="lcov" -instr-profile=$(find .build -name default.profdata) $(find .build -name ${{ env.PACKAGE_NAME }}PackageTests) > info.lcov
+#    - name: Upload to CodeCov.io
+#      uses: codecov/codecov-action@v2
+#      with:
+#        files: ./info.lcov
