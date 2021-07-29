@@ -11,7 +11,7 @@ jobs:
     env:
       PACKAGE_NAME: Injection
       
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - uses: fwal/setup-swift@v1
