@@ -9,12 +9,12 @@ final class InjectionTests: XCTestCase {
     class A { init(block: Action? = nil) { block?() } }
     class B { init(block: Action? = nil) { block?() } }
     struct C {}
-    
+
     enum Fail: Swift.Error {
         case mock
     }
-    
-    struct Failable {
+
+    enum Failable {
         static func create() throws -> Failable { throw Fail.mock }
     }
 
@@ -231,17 +231,17 @@ final class InjectionTests: XCTestCase {
         XCTAssertNotEqual(ObjectIdentifier(test1.a!), ObjectIdentifier(test2.a!))
         XCTAssertEqual(ObjectIdentifier(test1.b!), ObjectIdentifier(test2.b!))
     }
-    
+
     func test_factoryCreationWithFailure_wontThrowError() {
         XCTAssertNoThrow(try inject { factory { try Failable.create() } })
         assert(try resolve() as Failable, throws: Fail.mock)
     }
-    
+
     func test_lazySingletonCreationWithFailure_wontThrowError() {
         XCTAssertNoThrow(try inject { lazySingleton { try Failable.create() } })
         assert(try resolve() as Failable, throws: Fail.mock)
     }
-    
+
     func test_singletonCreationWithFailure_willThrowErrorImmediately() {
         assert(try inject { try singleton { try Failable.create() } }, throws: Fail.mock)
     }
