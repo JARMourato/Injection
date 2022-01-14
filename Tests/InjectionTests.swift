@@ -118,8 +118,8 @@ final class InjectionTests: XCTestCase {
     // MARK: Public Property Wrappers
 
     func testEagerInject() {
-        var hasInitializedA: Bool = false
-        var hasInitializedB: Bool = false
+        var hasInitializedA = false
+        var hasInitializedB = false
 
         XCTAssertNoThrow(try inject {
             factory { A { hasInitializedA = true } }
@@ -153,8 +153,8 @@ final class InjectionTests: XCTestCase {
     }
 
     func testLazyInject() {
-        var hasInitializedA: Bool = false
-        var hasInitializedB: Bool = false
+        var hasInitializedA = false
+        var hasInitializedB = false
 
         XCTAssertNoThrow(try inject {
             factory { A { hasInitializedA = true } }
@@ -193,8 +193,8 @@ final class InjectionTests: XCTestCase {
     }
 
     func testOptionalInject() {
-        var hasInitializedA: Bool = false
-        var hasInitializedB: Bool = false
+        var hasInitializedA = false
+        var hasInitializedB = false
 
         XCTAssertNoThrow(try inject {
             factory { A { hasInitializedA = true } }
