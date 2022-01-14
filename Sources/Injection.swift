@@ -92,7 +92,7 @@ public func resolveOptional<T>() -> T? { try? Dependencies.shared.resolve() as T
 @propertyWrapper
 public struct Inject<T> {
     public let wrappedValue: T
-    public init() { wrappedValue = try! resolve() } // As of Swift 5.3 property wrapper initializers cannot use `throws`. It will crash & burn
+    public init() { wrappedValue = try! resolve() } // As of Swift 5.5 property wrapper initializers cannot use `throws`. It will crash & burn
 }
 
 /// Creates a `Dependency` lazily injectable through `@LazyInject var variableName: Dependency`.
@@ -107,7 +107,7 @@ public enum LazyInject<T> {
         mutating get {
             switch self {
             case let .unresolved(resolver):
-                let dependency = try! resolver() // As of Swift 5.3 variables cannot use `throws`. It will crash & burn
+                let dependency = try! resolver() // As of Swift 5.5 property wrappers cannot define an 'async' or 'throws' accessor. It will crash & burn
                 self = .resolved(dependency)
                 return dependency
             case let .resolved(dependency):
