@@ -30,7 +30,7 @@ final class InjectionTests: XCTestCase {
     }
 
     func testDependencyContainerEmptyInjection() {
-        assert(try container.inject([]), throws: Injection.Error.noDependenciesInjected)
+        assert(try container.inject([]), throws: Injection.InjectionError.noDependenciesInjected)
     }
 
     func testDependencyContainerDuplicateInjection() {
@@ -38,18 +38,18 @@ final class InjectionTests: XCTestCase {
             DependencyContainer(isSingleton: true, factory: { A() }),
             DependencyContainer(isSingleton: false, factory: { A() }),
         ]
-        assert(try container.inject(duplicates), throws: Injection.Error.duplicateDependency("A"))
+        assert(try container.inject(duplicates), throws: Injection.InjectionError.duplicateDependency("A"))
     }
 
     func testDependencyContainerMultipleInjections() {
         let first = [DependencyContainer(isSingleton: true, factory: { A() })]
         XCTAssertNoThrow(try container.inject(first))
         let second = [DependencyContainer(isSingleton: true, factory: { B() })]
-        assert(try container.inject(second), throws: Injection.Error.multipleDependencyInjection)
+        assert(try container.inject(second), throws: Injection.InjectionError.multipleDependencyInjection)
     }
 
     func testDependencyContainerCannotResolveDependency() {
-        assert(try container.resolve() as C, throws: Injection.Error.failedToResolveDependency("C"))
+        assert(try container.resolve() as C, throws: Injection.InjectionError.failedToResolveDependency("C"))
     }
 
     func testDependencyContainerProperInjection() {

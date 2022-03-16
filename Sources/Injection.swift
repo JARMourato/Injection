@@ -25,7 +25,7 @@ final class DependencyContainer<T>: Dependency {
     }
 }
 
-public enum Error: LocalizedError, Hashable {
+public enum InjectionError: LocalizedError, Hashable {
     case noDependenciesInjected
     case multipleDependencyInjection
     case duplicateDependency(String)
@@ -52,17 +52,17 @@ final class Dependencies {
     func inject(_ dependencies: [Dependency]) throws {
         lock.lock()
         defer { lock.unlock() }
-        guard !dependencies.isEmpty else { throw Error.noDependenciesInjected }
-        guard injected.isEmpty else { throw Error.multipleDependencyInjection }
+        guard !dependencies.isEmpty else { throw InjectionError.noDependenciesInjected }
+        guard injected.isEmpty else { throw InjectionError.multipleDependencyInjection }
         for dependency in dependencies {
-            guard injected[dependency.typeName] == nil else { throw Error.duplicateDependency(dependency.typeName) }
+            guard injected[dependency.typeName] == nil else { throw InjectionError.duplicateDependency(dependency.typeName) }
             injected[dependency.typeName] = dependency
         }
     }
 
     func resolve<T>() throws -> T {
         let typeName = String(describing: T.self)
-        guard let injectedDependency = injected[typeName] else { throw Error.failedToResolveDependency(typeName) }
+        guard let injectedDependency = injected[typeName] else { throw InjectionError.failedToResolveDependency(typeName) }
         let resolved: T
         if injectedDependency.isSingleton {
             let buildBlock: DependencyFactory<T> = {
