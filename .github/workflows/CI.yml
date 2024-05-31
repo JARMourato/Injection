@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     env:
-      PACKAGE_NAME: Injection
+      SPM_NAME: Injection
       
     runs-on: macos-latest
 
