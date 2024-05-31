@@ -121,8 +121,8 @@ João ([@_JARMourato](https://twitter.com/_JARMourato))
 
 [build status]: https://github.com/JARMourato/Injection/actions?query=workflow%3ACI
 [build status badge]: https://github.com/JARMourato/Injection/workflows/CI/badge.svg
-[codebeat status]: https://codebeat.co/projects/github-com-jarmourato-injection-master
-[codebeat status badge]: https://codebeat.co/badges/3666b65d-490d-49fe-85c6-a31c3ddd8ae9
+[codebeat status]: https://codebeat.co/projects/github-com-jarmourato-injection-main
+[codebeat status badge]: https://codebeat.co/badges/2702c785-2ecd-4798-abe9-fe7ee77c2616
 [codecov status]: https://codecov.io/gh/JARMourato/Injection
 [codecov status badge]: https://codecov.io/gh/JARMourato/Injection/branch/main/graph/badge.svg?token=XAHCCI1JNM
 [platforms badge]: https://img.shields.io/static/v1?label=Platforms&message=iOS%20|%20macOS%20|%20tvOS%20|%20watchOS%20&color=brightgreen
