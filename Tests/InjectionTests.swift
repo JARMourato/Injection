@@ -30,7 +30,7 @@ final class InjectionTests: XCTestCase {
     }
 
     func testDependencyContainerEmptyInjection() {
-        assert(try container.inject([]), throws: Injection.InjectionError.noDependenciesInjected)
+        try assert(container.inject([]), throws: Injection.InjectionError.noDependenciesInjected)
     }
 
     func testDependencyContainerDuplicateInjection() {
@@ -38,18 +38,18 @@ final class InjectionTests: XCTestCase {
             DependencyContainer(isSingleton: true, factory: { A() }),
             DependencyContainer(isSingleton: false, factory: { A() }),
         ]
-        assert(try container.inject(duplicates), throws: Injection.InjectionError.duplicateDependency("A"))
+        try assert(container.inject(duplicates), throws: Injection.InjectionError.duplicateDependency("A"))
     }
 
     func testDependencyContainerMultipleInjections() {
         let first = [DependencyContainer(isSingleton: true, factory: { A() })]
         XCTAssertNoThrow(try container.inject(first))
         let second = [DependencyContainer(isSingleton: true, factory: { B() })]
-        assert(try container.inject(second), throws: Injection.InjectionError.multipleDependencyInjection)
+        try assert(container.inject(second), throws: Injection.InjectionError.multipleDependencyInjection)
     }
 
     func testDependencyContainerCannotResolveDependency() {
-        assert(try container.resolve() as C, throws: Injection.InjectionError.failedToResolveDependency("C"))
+        try assert(container.resolve() as C, throws: Injection.InjectionError.failedToResolveDependency("C"))
     }
 
     func testDependencyContainerProperInjection() {
@@ -234,16 +234,16 @@ final class InjectionTests: XCTestCase {
 
     func test_factoryCreationWithFailure_wontThrowError() {
         XCTAssertNoThrow(try inject { factory { try Failable.create() } })
-        assert(try resolve() as Failable, throws: Fail.mock)
+        try assert(resolve() as Failable, throws: Fail.mock)
     }
 
     func test_lazySingletonCreationWithFailure_wontThrowError() {
         XCTAssertNoThrow(try inject { lazySingleton { try Failable.create() } })
-        assert(try resolve() as Failable, throws: Fail.mock)
+        try assert(resolve() as Failable, throws: Fail.mock)
     }
 
     func test_singletonCreationWithFailure_willThrowErrorImmediately() {
-        assert(try inject { try singleton { try Failable.create() } }, throws: Fail.mock)
+        try assert(inject { try singleton { try Failable.create() } }, throws: Fail.mock)
     }
 }
 

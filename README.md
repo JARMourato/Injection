@@ -11,7 +11,7 @@
 **Features:**
 - `Singleton`, dependencies that are only instantiated once and are shared amongst its users
 - `LazySingleton`, dependencies that are only instantiated once, lazily, and are shared amongst its users
-- `Factory`, dependencies that are instancied upon usage, unique to each user
+- `Factory`, dependencies that are instancied upon usage, unique to each usage
 - Utility property wrappers
 
 

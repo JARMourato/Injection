@@ -180,5 +180,5 @@ public func module(@DependenciesBuilder makeChildren: () -> [Dependency]) -> [De
 ///
 /// - Note: It should be used only once.
 public func inject(@DependenciesBuilder makeDependencies: () throws -> [Dependency]) throws {
-    try Dependencies.shared.inject(try makeDependencies())
+    try Dependencies.shared.inject(makeDependencies())
 }
