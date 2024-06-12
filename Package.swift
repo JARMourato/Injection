@@ -1,16 +1,38 @@
 // swift-tools-version:5.10
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
+import CompilerPluginSupport
 import PackageDescription
 
 let package = Package(
     name: "Injection",
-    platforms: [.iOS(.v13), .macOS(.v12), .watchOS(.v6), .tvOS(.v13)],
+    platforms: [.iOS(.v13), .macOS(.v12), .watchOS(.v6), .tvOS(.v13), .visionOS(.v1)],
     products: [
         .library(name: "Injection", targets: ["Injection"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-syntax", from: "510.0.0"),
+    ],
     targets: [
-        .target(name: "Injection", dependencies: [], path: "Sources"),
-        .testTarget(name: "InjectionTests", dependencies: ["Injection"], path: "Tests"),
+        .macro(
+            name: "InjectionMacroImpl",
+            dependencies: [
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+            ],
+            path: "Sources/InjectionMacroImpl"
+        ),
+
+        .target(name: "Injection", dependencies: ["InjectionMacroImpl"], path: "Sources/Main"),
+
+        .testTarget(
+            name: "InjectionTests",
+            dependencies: [
+                "Injection",
+                "InjectionMacroImpl",
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+            ],
+            path: "Tests"
+        ),
     ]
 )

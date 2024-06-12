@@ -5,15 +5,75 @@
 [![codecov][codecov status badge]][codecov status]
 ![Platforms][platforms badge]
 
+`Injection` is a tiny utility to help managing dependency injection with SwiftUI.
 
-`Injection` is a tiny utility to help managing dependency injection.
+## Why would I use this?
 
-**Features:**
-- `Singleton`, dependencies that are only instantiated once and are shared amongst its users
-- `LazySingleton`, dependencies that are only instantiated once, lazily, and are shared amongst its users
-- `Factory`, dependencies that are instancied upon usage, unique to each usage
-- Utility property wrappers
+You shouldn't 😅 there's plenty of dependency injection libraries for swift out there - by no means is this intended to replace any of those.
+For my personal use cases, there's two main intents: 
+    - Simplify adding custom `EnvironmentValues` 
+    - Be able to use a similar api to `EnvironmentValues` for objects that aren't meant to be `Observable` or should not belong in the `View`'s `EnvironmentValues`
 
+## Usage
+
+```swift
+import Injection
+
+struct DependencyOne { ... }
+struct DependencyTwo { ... }
+
+// 1: Add the @Inject macro to the extension
+@Inject 
+extension EnvironmentValues {
+    var dep1 = DependencyOne()
+    var dep2 = DependencyTwo()
+}
+
+// 2: Use it normally with the @Environment property wrapper
+struct ExampleView: View {
+    @Environment(\.dep1) var dep1
+    @Environment(\.dep2) var dep2
+
+    var body: some View { ... }
+}
+
+```
+
+The same logic also applies to the simpler container `DependencyValues`: 
+
+```swift
+import Injection
+
+struct DependencyOne { ... }
+struct DependencyTwo { ... }
+
+// 1: Add the @Inject macro to the extension
+@Inject 
+extension DependencyValues {
+    var dep1 = DependencyOne()
+    var dep2 = DependencyTwo()
+}
+
+// (optionally) set it elsewhere in the view hierarchy
+
+@main
+struct ExampleApp: App {    
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .dependency(\.dep1, DependencyOne())
+        }
+    }
+}
+
+// 2: Use it with the @Dependency property wrapper
+struct ExampleView: View {
+    @Dependency(\.dep1) var dep1
+    @Dependency(\.dep2) var dep2
+
+    var body: some View { ... }
+}
+```
 
 ## Installation
 
@@ -23,89 +83,13 @@ If you're working directly in a Package, add Injection to your Package.swift fil
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/JARMourato/Injection.git", .upToNextMajor(from: "1.0.0" )),
+    .package(url: "https://github.com/JARMourato/Injection.git", .upToNextMajor(from: "2.0.0" )),
 ]
 ```
 
 If working in an Xcode project select `File->Swift Packages->Add Package Dependency...` and search for the package name: `Injection` or the git url:
 
 `https://github.com/JARMourato/Injection.git`
-
-
-## Usage
-
-1. Define dependencies:
-```swift
-import Injection
-
-// A dependency that gets created every time it needs to be resolved, and therefore its lifetime is bounded to the instance that uses it
-let reader = factory { RSSReader() }
-
-// A dependency that gets created immediately and is shared throughout the lifetime of the application.
-let database = singleton { Analytics() }
-
-// A dependency that gets created only once, the first time it needs to be resolved and has the lifetime of the application.
-let database = lazySingleton { Realm() }
-
-// Syntatic sugar to combine dependencies to inject
-let cacheModule = module {
-    singleton { ImageCache() }
-    factory { AudioCache() }
-    factory { VideoCache() }
-}
-```
-
-2. Inject the dependencies before the application is initialized:
-```swift
-import Injection
-
-@main
-class AppDelegate: UIResponder, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        do {
-            try inject {
-                reader
-                database
-                cacheModule
-            }
-        } catch {
-            print("TODO: Handle error properly... \(error)")
-        }
-        return true
-    }
-}
-```
-
-3. Use the injected dependencies using the provided property wrappers:
-```swift
-import Injection
-
-class VideoPlayer: BackendProtocol {
-    // Will resolve the dependency immediately upon type instantiation
-    @Inject var database: Database
-    
-    // The dependency only gets resolved on the first time the property gets accessed
-    @LazyInject var videoCache: VideoCache
-    
-    // The functionality is similar to `LazyInject` except the property may or may not have been injected.
-    @OptionalInject var network: Network?
-}
-```
-
-or via the initializer:
-
-```swift
-import Injection
-
-struct Reader {
-    private let rssReader: RSSReader
-    
-    init(rssReader: RSSReader = resolve()) {
-        self.rssReader = rssReader
-    }
-}
-```
-
 
 ## Contributions
 
