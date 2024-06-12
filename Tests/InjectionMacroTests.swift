@@ -1,6 +1,6 @@
 // Copyright © 2024 JARMourato All rights reserved.
 
-@testable import InjectionMacroImpl
+@testable import InjectionMacrosImpl
 import SwiftSyntaxMacrosTestSupport
 import XCTest
 
