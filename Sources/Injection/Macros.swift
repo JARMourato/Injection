@@ -13,4 +13,4 @@ public macro DependencyKey() = #externalMacro(module: "InjectionMacrosImpl", typ
 /// Applies the @DependencyKey macro to each child in the scope.
 /// This should only be applied on an `EnvironmentValues` or `DependencyValues` extensions.
 @attached(memberAttribute)
-public macro Inject() = #externalMacro(module: "InjectionMacrosImpl", type: "InjectValues")
+public macro Inject() = #externalMacro(module: "InjectionMacrosImpl", type: "InjectValuesMacro")
