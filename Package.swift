@@ -15,21 +15,20 @@ let package = Package(
     ],
     targets: [
         .macro(
-            name: "InjectionMacroImpl",
+            name: "InjectionMacrosImpl",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
-            ],
-            path: "Sources/InjectionMacroImpl"
+            ]
         ),
 
-        .target(name: "Injection", dependencies: ["InjectionMacroImpl"], path: "Sources/Main"),
+        .target(name: "Injection", dependencies: ["InjectionMacrosImpl"]),
 
         .testTarget(
             name: "InjectionTests",
             dependencies: [
                 "Injection",
-                "InjectionMacroImpl",
+                "InjectionMacrosImpl",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ],
             path: "Tests"
