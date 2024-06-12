@@ -11,8 +11,9 @@
 
 You shouldn't 😅 there's plenty of dependency injection libraries for swift out there - by no means is this intended to replace any of those.
 For my personal use cases, there's two main intents: 
-    - Simplify adding custom `EnvironmentValues` 
-    - Be able to use a similar api to `EnvironmentValues` for objects that aren't meant to be `Observable` or should not belong in the `View`'s `EnvironmentValues`
+
+- Simplify adding custom `EnvironmentValues` 
+- Be able to use a similar api to `EnvironmentValues` for objects that aren't meant to be `Observable` or should not belong in the `View`'s `EnvironmentValues`
 
 ## Usage
 
