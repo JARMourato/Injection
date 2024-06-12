@@ -7,6 +7,7 @@ import SwiftSyntaxMacros
 // MARK: - Custom Dependency Value Macros
 
 // MARK: Macro that adds Individual macro to every variable in the extension
+
 public struct InjectValuesMacro: MemberAttributeMacro {
     public static func expansion(
         of node: AttributeSyntax,
@@ -44,6 +45,7 @@ public struct InjectValuesMacro: MemberAttributeMacro {
 }
 
 // MARK: Macro to synthesize a custom DependencyKey conformance
+
 public struct DependencyKeyMacro: PeerMacro {
     public static func expansion(
         of node: AttributeSyntax,
@@ -75,9 +77,9 @@ public struct DependencyKeyMacro: PeerMacro {
 
 extension DependencyKeyMacro: AccessorMacro {
     public static func expansion(
-        of node: AttributeSyntax,
+        of _: AttributeSyntax,
         providingAccessorsOf declaration: some DeclSyntaxProtocol,
-        in context: some MacroExpansionContext
+        in _: some MacroExpansionContext
     ) throws -> [AccessorDeclSyntax] {
         guard let varDecl = declaration.as(VariableDeclSyntax.self) else { return [] }
         guard let binding = varDecl.bindings.first else { return [] }

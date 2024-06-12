@@ -5,7 +5,6 @@ import SwiftUI
 import XCTest
 
 final class DependencyTests: XCTestCase {
-
     func testReadDependency() {
         // Given
         let assertionValue = 100
@@ -15,7 +14,7 @@ final class DependencyTests: XCTestCase {
         // Then
         XCTAssertEqual(assertionValue, readValue)
     }
-    
+
     func testWriteDependency() {
         // Given
         let assertionValue = 100
@@ -53,7 +52,6 @@ final class DependencyTests: XCTestCase {
 // MARK: Helper extension
 
 extension DependencyValues {
-
     var number: Int {
         get { self[NumberKey.self] }
         set { self[NumberKey.self] = newValue }

@@ -11,8 +11,8 @@ public struct DependencyValues {
     @usableFromInline static var shared = DependencyValues()
 
     subscript<K>(key: K.Type) -> K.Value where K: DependencyKey {
-        get { self.values[ObjectIdentifier(key)] as? K.Value ?? key.defaultValue }
-        set { self.values[ObjectIdentifier(key)] = newValue }
+        get { values[ObjectIdentifier(key)] as? K.Value ?? key.defaultValue }
+        set { values[ObjectIdentifier(key)] = newValue }
     }
 }
 
@@ -43,7 +43,8 @@ public struct DependencyValues {
 }
 
 // MARK: SwiftUI helper
-extension View {
+
+public extension View {
     /// Sets the dependency value of the specified key path to the given value.
     ///
     /// Use this modifier to set one of the writable properties of the
@@ -58,41 +59,8 @@ extension View {
     ///   - value: The new value to set for the item specified by `keyPath`.
     ///
     /// - Returns: The same view, unmodified.
-    @inlinable public func dependency<V>(_ keyPath: WritableKeyPath<DependencyValues, V>, _ value: V) -> some View {
+    @inlinable func dependency<V>(_ keyPath: WritableKeyPath<DependencyValues, V>, _ value: V) -> some View {
         DependencyValues.shared[keyPath: keyPath] = value
         return self
     }
 }
-
-
-/*
-struct DepA {
-    var text = "hello"
-}
-
-
-
-
-
-@Inject
-extension DependencyValues {
-    
-    var depA = DepA()
-
-    static var teste: String = ""
-}
-
-
-struct TestView: View {
-    @Environment(\.depB) var depB
-    @Dependency(\.depA) var depA
-
-    var body: some View {
-        EmptyView()
-    }
-
-    func teste() {
-        
-    }
-}
-*/

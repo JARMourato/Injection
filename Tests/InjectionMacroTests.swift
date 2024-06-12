@@ -1,11 +1,10 @@
 // Copyright © 2024 JARMourato All rights reserved.
 
-import XCTest
-import SwiftSyntaxMacrosTestSupport
 @testable import InjectionMacroImpl
+import SwiftSyntaxMacrosTestSupport
+import XCTest
 
 final class InjectionMacroTests: XCTestCase {
-    
     func testEnvironmentValuesInjectExpandedMacro() {
         assertMacroExpansion(
             """
@@ -21,7 +20,7 @@ final class InjectionMacroTests: XCTestCase {
                 var number: Int = 10
             }
             """,
-            macros: ["Inject" : InjectValuesMacro.self]
+            macros: ["Inject": InjectValuesMacro.self]
         )
     }
 
@@ -49,7 +48,7 @@ final class InjectionMacroTests: XCTestCase {
                 }
             }
             """,
-            macros: ["DependencyKey" : DependencyKeyMacro.self]
+            macros: ["DependencyKey": DependencyKeyMacro.self]
         )
     }
 
@@ -92,8 +91,8 @@ final class InjectionMacroTests: XCTestCase {
             }
             """,
             macros: [
-                "Inject" : InjectValuesMacro.self,
-                "DependencyKey" : DependencyKeyMacro.self
+                "Inject": InjectValuesMacro.self,
+                "DependencyKey": DependencyKeyMacro.self,
             ]
         )
     }
@@ -113,7 +112,7 @@ final class InjectionMacroTests: XCTestCase {
                 var number: Int = 10
             }
             """,
-            macros: ["Inject" : InjectValuesMacro.self]
+            macros: ["Inject": InjectValuesMacro.self]
         )
     }
 
@@ -141,7 +140,7 @@ final class InjectionMacroTests: XCTestCase {
                 }
             }
             """,
-            macros: ["DependencyKey" : DependencyKeyMacro.self]
+            macros: ["DependencyKey": DependencyKeyMacro.self]
         )
     }
 
@@ -184,8 +183,8 @@ final class InjectionMacroTests: XCTestCase {
             }
             """,
             macros: [
-                "Inject" : InjectValuesMacro.self,
-                "DependencyKey" : DependencyKeyMacro.self
+                "Inject": InjectValuesMacro.self,
+                "DependencyKey": DependencyKeyMacro.self,
             ]
         )
     }
