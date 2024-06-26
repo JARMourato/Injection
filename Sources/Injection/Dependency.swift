@@ -8,9 +8,10 @@ public struct DependencyValues {
     private var values: [ObjectIdentifier: Any] = [:]
 
     init() {}
+
     @usableFromInline static var shared = DependencyValues()
 
-    subscript<K>(key: K.Type) -> K.Value where K: DependencyKey {
+    public subscript<K>(key: K.Type) -> K.Value where K: DependencyKey {
         get { values[ObjectIdentifier(key)] as? K.Value ?? key.defaultValue }
         set { values[ObjectIdentifier(key)] = newValue }
     }
