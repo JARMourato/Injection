@@ -7,8 +7,7 @@ import XCTest
 final class DependencyTests: XCTestCase {
     func testReadDependency() {
         // Given
-        let assertionValue = 100
-        DependencyValues.NumberKey.defaultValue = assertionValue
+        let assertionValue = 10
         // When
         let readValue = DependencyValues.shared[keyPath: \.number]
         // Then
@@ -37,7 +36,7 @@ final class DependencyTests: XCTestCase {
         XCTAssertEqual(value, DependencyValues.NumberKey.defaultValue)
     }
 
-    func testSwiftUIViewUtilityWriter() {
+    @MainActor func testSwiftUIViewUtilityWriter() {
         // Given
         let view = EmptyView()
         let assertionValue = 100
@@ -58,6 +57,8 @@ extension DependencyValues {
     }
 
     struct NumberKey: DependencyKey {
-        static var defaultValue: Int = 10
+        static var defaultValue: Int {
+            10
+        }
     }
 }

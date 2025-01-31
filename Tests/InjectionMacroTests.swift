@@ -16,7 +16,7 @@ final class InjectionMacroTests: XCTestCase {
             expandedSource:
             """
             extension EnvironmentValues {
-                @DependencyKey
+                @Entry
                 var number: Int = 10
             }
             """,
@@ -36,14 +36,14 @@ final class InjectionMacroTests: XCTestCase {
             extension EnvironmentValues {
                 var number: Int {
                     get {
-                        self [___number.self]
+                        self[__Key_number.self]
                     }
                     set {
-                        self [___number.self] = newValue
+                        self[__Key_number.self] = newValue
                     }
                 }
 
-                private struct ___number: DependencyKey {
+                private struct __Key_number: DependencyKey {
                     static let defaultValue: Int = 10
                 }
             }
@@ -64,30 +64,10 @@ final class InjectionMacroTests: XCTestCase {
             expandedSource:
             """
             extension EnvironmentValues {
-                var number: Int {
-                    get {
-                        self [___number.self]
-                    }
-                    set {
-                        self [___number.self] = newValue
-                    }
-                }
-
-                private struct ___number: DependencyKey {
-                    static let defaultValue: Int = 10
-                }
-                var text: String {
-                    get {
-                        self [___text.self]
-                    }
-                    set {
-                        self [___text.self] = newValue
-                    }
-                }
-
-                private struct ___text: DependencyKey {
-                    static let defaultValue: String = "Hello"
-                }
+                @Entry
+                var number: Int = 10
+                @Entry
+                var text: String = "Hello"
             }
             """,
             macros: [
@@ -128,14 +108,14 @@ final class InjectionMacroTests: XCTestCase {
             extension DependencyValues {
                 var number: Int {
                     get {
-                        self [___number.self]
+                        self[__Key_number.self]
                     }
                     set {
-                        self [___number.self] = newValue
+                        self[__Key_number.self] = newValue
                     }
                 }
 
-                private struct ___number: DependencyKey {
+                private struct __Key_number: DependencyKey {
                     static let defaultValue: Int = 10
                 }
             }
@@ -158,26 +138,26 @@ final class InjectionMacroTests: XCTestCase {
             extension DependencyValues {
                 var number: Int {
                     get {
-                        self [___number.self]
+                        self[__Key_number.self]
                     }
                     set {
-                        self [___number.self] = newValue
+                        self[__Key_number.self] = newValue
                     }
                 }
 
-                private struct ___number: DependencyKey {
+                private struct __Key_number: DependencyKey {
                     static let defaultValue: Int = 10
                 }
                 var text: String {
                     get {
-                        self [___text.self]
+                        self[__Key_text.self]
                     }
                     set {
-                        self [___text.self] = newValue
+                        self[__Key_text.self] = newValue
                     }
                 }
 
-                private struct ___text: DependencyKey {
+                private struct __Key_text: DependencyKey {
                     static let defaultValue: String = "Hello"
                 }
             }

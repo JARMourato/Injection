@@ -33,7 +33,44 @@ public struct InjectValuesMacro: MemberAttributeMacro {
 
         guard !isStatic else { return [] }
 
-        // Note: Implement usage of @Entry for EnvironmentValues for iOS 18
+        if extensionName == "EnvironmentValues" {
+            #if os(iOS)
+                if #available(iOS 18.0, *) {
+                    return [AttributeSyntax(
+                        atSign: .atSignToken(),
+                        attributeName: IdentifierTypeSyntax(name: .identifier("Entry"))
+                    )]
+                }
+            #elseif os(macOS)
+                if #available(macOS 15.0, *) {
+                    return [AttributeSyntax(
+                        atSign: .atSignToken(),
+                        attributeName: IdentifierTypeSyntax(name: .identifier("Entry"))
+                    )]
+                }
+            #elseif os(tvOS)
+                if #available(tvOS 18.0, *) {
+                    return [AttributeSyntax(
+                        atSign: .atSignToken(),
+                        attributeName: IdentifierTypeSyntax(name: .identifier("Entry"))
+                    )]
+                }
+            #elseif os(watchOS)
+                if #available(watchOS 11.0, *) {
+                    return [AttributeSyntax(
+                        atSign: .atSignToken(),
+                        attributeName: IdentifierTypeSyntax(name: .identifier("Entry"))
+                    )]
+                }
+            #elseif os(visionOS)
+                if #available(visionOS 2.0, *) {
+                    return [AttributeSyntax(
+                        atSign: .atSignToken(),
+                        attributeName: IdentifierTypeSyntax(name: .identifier("Entry"))
+                    )]
+                }
+            #endif
+        }
 
         return [
             AttributeSyntax(
@@ -67,7 +104,7 @@ public struct DependencyKeyMacro: PeerMacro {
 
         return [
             """
-            private struct ___\(raw: identifier.trimmedDescription): DependencyKey {
+            private struct __Key_\(raw: identifier.trimmedDescription): DependencyKey {
                 static let \(binding) \(raw: isOptionalType && !hasDefaultValue ? "= nil" : "")
             }
             """,
@@ -88,12 +125,12 @@ extension DependencyKeyMacro: AccessorMacro {
         return [
             """
             get {
-                self[___\(raw: identifier.trimmedDescription).self]
+                self[__Key_\(raw: identifier.trimmedDescription).self]
             }
             """,
             """
             set {
-                self[___\(raw: identifier.trimmedDescription).self] = newValue
+                self[__Key_\(raw: identifier.trimmedDescription).self] = newValue
             }
             """,
         ]

@@ -4,12 +4,12 @@ import SwiftUI
 
 public typealias DependencyKey = EnvironmentKey
 
-public struct DependencyValues {
+@preconcurrency public struct DependencyValues {
     private var values: [ObjectIdentifier: Any] = [:]
 
     init() {}
 
-    @usableFromInline static var shared = DependencyValues()
+    @usableFromInline nonisolated(unsafe) static var shared = DependencyValues()
 
     public subscript<K>(key: K.Type) -> K.Value where K: DependencyKey {
         get { values[ObjectIdentifier(key)] as? K.Value ?? key.defaultValue }

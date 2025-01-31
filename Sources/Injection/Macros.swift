@@ -4,7 +4,7 @@
 
 /// Creates an unique `DependencyKey` for the variable and adds getters and setters.
 /// The initial value of the variable becomes the default value of the `DependencyKey`.
-@attached(peer, names: prefixed(___))
+@attached(peer, names: prefixed(__Key_))
 @attached(accessor, names: named(get), named(set))
 public macro DependencyKey() = #externalMacro(module: "InjectionMacros", type: "DependencyKeyMacro")
 
