@@ -11,7 +11,7 @@ jobs:
     env:
       SP_NAME: Injection
       
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
     - name: Check out code
